@@ -20,6 +20,7 @@
 		$country = textSafety($_POST['country']);
 		$address = textSafety($_POST['address']);
 		$comment = textSafety($_POST['comment']);
+		$confirmation_code = md5($email);
 		if(!$name || !$gender || !$email || !$first_password || !$repeat_password || !$blood_group || !$first_time_donor || !$mobile_number_one || !$zip_code || !$country || !$address){
 			$url="../create-user.php?error=100&name=$name&gender=$gender&email=$email&blood_group=$blood_group&first_time_donor=$first_time_donor&zip_code=$zip_code&country=$country&last_donate_date=$last_donate_date&place_of_donation=$place_of_donation&mobile_number_two=$mobile_number_two&mobile_number_one=$mobile_number_one&address=$address&comment=$comment";
 			header("Refresh:0;URL=$url");
@@ -41,7 +42,7 @@
 		$joining_date = date("Y-m-d");
 		// Change it after making login
 		$last_login = $today = date("Y-m-d H:i:s");
-		$sql = "INSERT INTO `login_details` (name, email, password, joining_date, last_login) VALUES ('$name', '$email', '$first_password', '$joining_date', '$last_login')";
+		$sql = "INSERT INTO `login_details` (name, email, password, joining_date, last_login, isConfirmed, confirmation_code) VALUES ('$name', '$email', '$first_password', '$joining_date', '$last_login', 'no', '$confirmation_code')";
 		$result = query($sql);
 		if (!$result) {
 			$email_error_message = mysql_error();
@@ -69,6 +70,17 @@
 				}
 			}
 		}
+
+			
+		$body = getConfirmationEmailBody($name, $confirmation_code);
+		$to = $email;
+		$to_name = $name;
+		$from = "stackover96@gmail.com";
+		$from_name = "YOUR_APP_NAME";
+		$subject = "Confirmation mail";
+		
+		sendMail($to, $to_name, $from, $from_name, $subject, $body);
+		
 	}
 	
 ?>
@@ -101,7 +113,7 @@
 						success: function(html){
 							if(html == 1){
 								alert(html);
-								window.location.replace("../improve-profile.php");
+								window.location.replace("../confirm-user.php?sent=true");
 							}
 						}
 					});

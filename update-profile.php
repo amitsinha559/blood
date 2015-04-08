@@ -3,15 +3,47 @@
 	include "inc/country-code.php";
 	include "inc/common.class.php";
 	$name = ''; $gender = ''; $email = ''; $blood_group = ''; $first_time_donor = ''; $mobile_number_one = ''; $zip_code = ''; $country = ''; $address = ''; $mobile_number_two = ''; $last_donate_date = ''; $place_of_donation = ''; $comment = '';
+	
+
+	
+	
+	if(isset($_SESSION["id"])){
+		$update_id = textSafety($_SESSION["id"]);
+		$getAllDataQuery = "SELECT l.id, l.name, l.email, d.login_id, d.gender, d.blood_group, d.first_time_donor, d.last_donate_date, d.place_of_donation, d.mobile_number_one, d.mobile_number_two, d.zip_code, d.country, d.address, d.places_nearby, d.comments FROM `donor_details` AS d LEFT JOIN `login_details` AS l ON l.id = d.login_id && l.id='$update_id'";
+		$getAllDataResult = query($getAllDataQuery);
+		while($row = mysql_fetch_array($getAllDataResult)){
+			$name = $row['name'];
+			$email = $row['email'];
+			$gender = $row['gender'];
+			$blood_group = $row['blood_group'];
+			if($blood_group == "A+"){
+				$blood_group = "A";
+			} elseif($blood_group == "B+") {
+				$blood_group = "B";
+			} elseif($blood_group == "AB+") {
+				$blood_group = "AB";
+			}
+			$first_time_donor = $row['first_time_donor'];
+			$mobile_number_one = $row['mobile_number_one'];
+			$zip_code = $row['zip_code'];
+			$country = $row['country'];
+			$address = $row['address'];
+			$mobile_number_two = $row['mobile_number_two'];
+		}
+	}
+	
 	if(isset($_GET['name'])){
 		$name = textSafety($_GET['name']);
 	}
-	if(isset($_GET['gender'])){
-		$gender = textSafety($_GET['gender']);
-	}
+	
 	if(isset($_GET['email'])){
 		$email = textSafety($_GET['email']);
 	}
+	
+	if(isset($_GET['gender'])){
+		$gender = textSafety($_GET['gender']);
+	}
+	
 	if(isset($_GET['blood_group'])){
 		$blood_group = textSafety($_GET['blood_group']);
 	}
@@ -55,13 +87,15 @@
 	if(isset($_GET['error']) && $_GET['error'] == 103) {
 		$error_code = 103;
 	}
+	
+	
 ?>
 
 <div id="content">
 	<div class="inner">
 		<article class="box post post-excerpt">
-			<h3>Please Enter Proper Details</h3><br/>
-			<form method="POST" name="donor_form" action="process/create-user.php" onsubmit="return validateText()">
+			<h3>Update Your Details :</h3><br/>
+			<form method="POST" name="donor_form" action="process/update-profile.php" onsubmit="return validateText()">
 						<div id="globalError" class="error"></div>
 						<div class="">Name :</div>
 						<div class="">
@@ -83,18 +117,6 @@
 							<input type="text" tabindex="3" maxlength="60" id="email" name="email" value="<?php echo $email; ?>"/>
 						</div>
 						<div id="email_error" class="error"></div>
-						<br/>
-						<div class="">Password :</div>
-						<div class="">
-							<input type="password" tabindex="4" maxlength="60" id="first_password" name="first_password"/>
-						</div>
-						<div id="pass_one_error" class="error"></div>
-						<br/>
-						<div class="">Repeat Password :</div>
-						<div class="">
-							<input type="password" tabindex="5" maxlength="60" id="password" name="repeat_password"/>
-						</div>
-						<div id="pass_two_error" class="error"></div>
 						<br/>
 						<div class="">Choose Blood Group :</div>
 						<div class="">
@@ -186,12 +208,13 @@
 						<br/>
 						<div class="">Add Comment:</div>
 						<div class="">
-							<textarea id="comment" tabindex="15" name="comment"><?php echo $comment; ?></textarea>
+							<textarea id="comment" tabindex="15" name="comments"><?php echo $comment; ?></textarea>
 						</div>
 						<br/>
 						<div class=""></div>
+						<input type="hidden" id="hidden_id" name="hidden_id" value="<?php echo $update_id; ?>"/>
 						<div class="">
-							<input type="submit" tabindex="15" class='btn btn-primary' style="width:206px;" name="submit_details" value="Submit">
+							<input type="submit" tabindex="15" class='btn btn-primary' style="width:206px;" name="update_details" value="Update">
 						</div>
 				</form>
 		</article>
@@ -213,17 +236,11 @@
 	$(function() {
 		var errorCode = "<?php echo $error_code; ?>";
 		clearField('globalError');
-		clearField('pass_one_error');
-		clearField('pass_two_error');
 		clearField('last_donate_error');
 		clearField('place_of_donation_error');
 		clearField('email_error');
 		if(errorCode === '100'){
 			$("#globalError").html('Please enter all the required fields');
-		}
-		if(errorCode === '101'){
-			$("#pass_one_error").html('Password is not matching');
-			$("#pass_two_error").html('Password is not matching');
 		}
 		if(errorCode === '102'){
 			$("#last_donate_error").html('Please enter the last date of donation');
@@ -242,13 +259,13 @@
 		var requiredFieldsName;
 		var errorIds;
 		if (isFirstTimeDonor === "Yes") {
-			requiredFields = ['name', 'gender', 'email', 'first_password', 'repeat_password', 'mobile_number_one', 'zip_code', 'address'];
-			requiredFieldsName = ['Name', 'Gender', 'Email', 'Password', 'Password', 'Mobile Number', 'Zip Code', 'Address'];
-			errorIds = ['name_error', 'gender_error', 'email_error','pass_one_error', 'pass_two_error', 'mob_one_error', 'zip_code_error', 'address_error'];
+			requiredFields = ['name', 'gender', 'email', 'mobile_number_one', 'zip_code', 'address'];
+			requiredFieldsName = ['Name', 'Gender', 'Email', 'Mobile Number', 'Zip Code', 'Address'];
+			errorIds = ['name_error', 'gender_error', 'email_error', 'mob_one_error', 'zip_code_error', 'address_error'];
 		} else {
-			requiredFields = ['name', 'gender', 'email', 'first_password', 'repeat_password', 'last_donate_date', 'place_of_donation', 'mobile_number_one', 'zip_code', 'address'];
-			requiredFieldsName = ['Name', 'Gender', 'Email', 'Password', 'Password', 'Last Donate Date', 'Place of Donation', 'Mobile Number', 'Zip Code', 'Address'];
-			errorIds = ['name_error', 'gender_error', 'email_error','pass_one_error','pass_two_error','last_donate_error', 'place_of_donation_error', 'mob_one_error', 'zip_code_error', 'address_error'];
+			requiredFields = ['name', 'gender', 'email', 'last_donate_date', 'place_of_donation', 'mobile_number_one', 'zip_code', 'address'];
+			requiredFieldsName = ['Name', 'Gender', 'Email', 'Last Donate Date', 'Place of Donation', 'Mobile Number', 'Zip Code', 'Address'];
+			errorIds = ['name_error', 'gender_error', 'email_error', 'last_donate_error', 'place_of_donation_error', 'mob_one_error', 'zip_code_error', 'address_error'];
 		}
 		var formName = 'donor_form';
 		var params = {

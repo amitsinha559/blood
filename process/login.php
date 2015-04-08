@@ -7,18 +7,29 @@
 		$loginQuery = "SELECT * FROM `login_details` WHERE email='$email' AND password='$password'";
 		$loginQueryResult = query($loginQuery);
 		while($row = mysql_fetch_array($loginQueryResult)) {
-			if($row['email'] != $email){
-				$_SESSION["isLogin"] = false;
-				$_SESSION["email"] = null;
-				$_SESSION["name"] = null;
+			if($row['isConfirmed'] == "no"){
+				$email = $row['email'];
+				$name = $row['name'];
+				$confirmation_code = $row['confirmation_code'];
+				$url="../index.php?email=$email&con=false&no=yes&name=$name&code=$confirmation_code";
+				header("Refresh:0;URL=$url");
+				exit(0);
 			} else {
-				$_SESSION["isLogin"] = true;
-				$_SESSION["email"] = $row['email'];
-				$_SESSION["name"] = $row['name'];
-				//$url="update-profile.php";
-				//header("Refresh:0;URL=$url");
-				//exit(0);
+				if($row['email'] != $email){
+					$_SESSION["isLogin"] = false;
+					$_SESSION["email"] = null;
+					$_SESSION["name"] = null;
+				} else {
+					$_SESSION["isLogin"] = true;
+					$_SESSION["email"] = $row['email'];
+					$_SESSION["name"] = $row['name'];
+					$_SESSION["id"] = $row['id'];
+					$url="index.php";
+					header("Refresh:0;URL=$url");
+					exit(0);
+				}
 			}
+			
 		}
 	}
 ?>

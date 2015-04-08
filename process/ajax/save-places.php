@@ -4,4 +4,8 @@
 		$places = $_POST['places'];
 		$login_id = $_POST['loginId'];
 	}
+	
+	if(isse($_POST['updateOnly']) && $_POST['updateOnly'] == "true"){
+		
+	}
 ?>

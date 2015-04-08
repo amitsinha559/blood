@@ -69,3 +69,12 @@ function clearField(fieldName){
 	div = document.getElementById(fieldName);
 	return div;
 }
+
+function emailValidate(email){
+	var atpos=email.indexOf("@");
+	var dotpos=email.lastIndexOf(".");
+	if (atpos<1 || dotpos<atpos+2 || dotpos+2>=email.length){
+		return false;
+	}
+	return true;
+}

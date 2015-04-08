@@ -1,3 +1,10 @@
+				<?php
+				if(isset($_SESSION["email"]) && isset($_SESSION["name"]) && isset($_SESSION["id"])){
+					$sessionName = $_SESSION["name"];
+					$sessionId = $_SESSION["id"];
+					$sessionEmail = $_SESSION["email"];
+				}
+				?>
 				<div id="sidebar">
 					
 						<!-- Logo -->
@@ -7,7 +14,7 @@
 							<nav id="nav">
 								<ul>
 									<li class="current"><a href="#">Latest Post</a></li>
-									<li><a href="#">Archives</a></li>
+									<li><a href="update-profile.php">Update profile</a></li>
 									<li><a href="#">About Me</a></li>
 									<li><a href="#">Contact Me</a></li>
 								</ul>
@@ -20,8 +27,28 @@
 								</form>
 							</section>
 						-->
-						<?php 
+						
+						<?php
 						if(!isset($_SESSION["isLogin"]) && !isset($_SESSION["email"]) && !isset($_SESSION["name"])){
+							$is_confirmed = true;
+							if(isset($_GET['email']) && isset($_GET['con']) && isset($_GET['no']) && ($_GET['con'] == "false") && ($_GET['no'] == "yes") && isset($_GET['name']) && isset($_GET['code'])){
+								$is_confirmed = false;
+								$email = $_GET['email'];
+								$name = $_GET['name'];
+								$code = $_GET['code'];
+							}
+							if(isset($_GET['send']) && isset($_GET['emailto']) && isset($_GET['name']) && isset($_GET['code'])){
+								$toName = $_GET['name'];
+								$conCode = $_GET['code'];
+								$body = getConfirmationEmailBody($toName, $conCode);
+								
+								$toEmail = $_GET['emailto'];
+								$from = "stackover96@gmail.com";
+								$from_name = "YOUR_APP_NAME";
+								$subject = "Confirmation mail";								
+								sendMail($toEmail, $toName, $from, $from_name, $subject, $body);
+								
+							}
 						?>
 						<section class="box">
 							<form method="POST" name="login_form" action="process/login.php" onsubmit="return submitLoginForm()">
@@ -29,9 +56,19 @@
 								<div id="login_email_error"></div>
 								<br/>
 								<input type="password" tabindex="9" class="password login-box-left" name="login_password" placeholder="Password" />
-								<div id="login_password_error"></div>
-								<br/>
+								<div id="login_password_error"></div>								
+								<?php
+								if(!$is_confirmed){
+								?>
+								Please confirm your email.
+								<a href="index.php?send=true&f=345dd&yu=asd22&emailto=<?php echo $email; ?>&code=<?php echo $code;?>&name=<?php echo $name;?>">Resend confirmation link</a><br/>
+								<?php
+								} else {
+									echo "<br/>";
+								}
+								?>
 								<input type="submit" tabindex="10" style="width:100%; padding: 1.5px 2em 0.5em 2em;" name="login_btn" value="Login">
+								<a href="#" onClick="resetPassword()">Forgot password?</a>
 							</form>
 						</section>
 						<?php
@@ -158,5 +195,27 @@
 			return false;
 		}
 		return true;
+	}
+	
+	function resetPassword(){
+		var email = prompt("Please enter your registered email id", "");
+		if(emailValidate(email)){
+			var query = "send=pass&email="+email;
+			$.ajax({
+				type: "POST",
+				url: "forgot-password.php",
+				data: query,
+				cache: false,
+				success: function(html){
+					if(html == 1){
+						alert(html);
+						// window.location.replace("../confirm-user.php?sent=true");
+					}
+				}
+			});
+		} else {
+			var email = prompt("Please enter a valid email id", "");
+			resetPassword();
+		}
 	}
 </script>
