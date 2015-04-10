@@ -57,17 +57,7 @@ function validateForm(formName, requiredFields, requiredFieldsName, errorIds){
 	}
 }
 
-function validatePassword(formName, passTwoFieldName, passOneFieldName, errorId){
-	passwordOneValue = document.forms[formName][passOneFieldName].value;
-	passwordTwoValue = document.forms[formName][passTwoFieldName].value;
-	if(passwordOneValue != passwordTwoValue){
-		var div = document.getElementById(errorId);
-		div.innerHTML = '';
-		div.innerHTML = 'Password is not matching';
-		return false;
-	}
-	return true;
-}
+
 
 function validateMobileNumber(formName, mobileFieldOne, mobileFieldOneErrorId){
 	mobileNumberOne = document.forms[formName][mobileFieldOne].value;

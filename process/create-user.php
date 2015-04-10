@@ -1,4 +1,5 @@
 <?php
+
 	include "../inc/common.class.php";
 	
 	if(isset($_POST['submit_details'])) {
@@ -71,13 +72,14 @@
 			}
 		}
 
-			
-		$body = getConfirmationEmailBody($name, $confirmation_code);
+		$sender_name = SENDER_NAME; //warm regards
+		$body = getConfirmationEmailBody($name, $confirmation_code, $sender_name);
 		$to = $email;
 		$to_name = $name;
-		$from = "stackover96@gmail.com";
-		$from_name = "YOUR_APP_NAME";
 		$subject = "Confirmation mail";
+		
+		$from = SENDER_EMAIL;
+		$from_name = APP_NAME;
 		
 		sendMail($to, $to_name, $from, $from_name, $subject, $body);
 		

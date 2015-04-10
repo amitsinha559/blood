@@ -1,5 +1,5 @@
   <style>
-    body { font-size: 62.5%; }
+  
     label, input { display:block; }
     input.text { margin-bottom:12px; width:95%; padding: .4em; }
     fieldset { padding:0; border:0; margin-top:25px; }
@@ -10,76 +10,7 @@
     .ui-dialog .ui-state-error { padding: .3em; }
     .validateTips { border: 1px solid transparent; padding: 0.3em; }
   </style>
-<script>
-  $(function() {
-    var dialog, form, 
-      // From http://www.whatwg.org/specs/web-apps/current-work/multipage/states-of-the-type-attribute.html#e-mail-state-%28type=email%29
-      emailRegex = /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/,
-      reset_email = $( "#reset_email" ),
-      allFields = $( [] ).add( reset_email ),
-      tips = $( ".validateTips" );
- 
-    function updateTips( t ) {
-      tips
-        .text( t )
-        .addClass( "ui-state-highlight" );
-      setTimeout(function() {
-        tips.removeClass( "ui-state-highlight", 1500 );
-      }, 500 );
-    }
- 
-    function checkRegexp( email, regexp, n ) {
-		var email1 = email.val();
-		var o = email;
-		var atpos=email1.indexOf("@");
-		var dotpos=email1.lastIndexOf(".");
-		if (atpos<1 || dotpos<atpos+2 || dotpos+2>=email1.length){
-			o.addClass( "ui-state-error" );
-			updateTips( n );
-			return false;
-		}
-		return true;
-    }
- 
-    function addUser() {
-      var valid = true;
-      allFields.removeClass( "ui-state-error" );
-      valid = valid && checkRegexp( reset_email, emailRegex, "eg. amitsinha559@gmail.com" );
- 
-      if ( valid ) {
-		  
-        dialog.dialog( "close" );
-      }
-      return valid;
-    }
- 
-    dialog = $( "#dialog-form" ).dialog({
-      autoOpen: false,
-      height: 300,
-      width: 350,
-      modal: true,
-      buttons: {
-        "Reset Password": addUser,
-        Cancel: function() {
-          dialog.dialog( "close" );
-        }
-      },
-      close: function() {
-        form[ 0 ].reset();
-        allFields.removeClass( "ui-state-error" );
-      }
-    });
- 
-    form = dialog.find( "form" ).on( "submit", function( event ) {
-      event.preventDefault();
-      addUser();
-    });
- 
-    $( "#create-user" ).button().on( "click", function() {
-      dialog.dialog( "open" );
-    });
-  });
-  </script>
+
 
 				<?php
 				if(isset($_SESSION["email"]) && isset($_SESSION["name"]) && isset($_SESSION["id"])){
@@ -90,21 +21,22 @@
 				?>
 				<div id="sidebar">
 					<section>
-<div id="dialog-form" title="Please enter your registered email id">
- 
-  <form>
-    <fieldset>
-      <label for="email">Email</label>
-      <input type="text" name="reset_email" id="reset_email" value="jane@smith.com" class="text ui-widget-content ui-corner-all">
- 
-      <!-- Allow form submission with keyboard without duplicating the dialog button -->
-      <input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
-    </fieldset>
-  </form>
-  <p class="Tips">An email will be sent to this email address that includes the new password</p>
-  <p class="validateTips"></p>
-</div>
-<button id="create-user">Create user</button>
+						<div id="dialog-form" title="Please enter your registered email id">
+						 
+						  <form>
+							<fieldset>
+							  <label for="email">Email</label>
+							  <input type="text" name="reset_email" id="reset_email" value="jane@smith.com" class="text ui-widget-content ui-corner-all">
+						 
+							  <!-- Allow form submission with keyboard without duplicating the dialog button -->
+							  <input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
+							</fieldset>
+						  </form>
+						  <p class="validateTips"></p>
+						  <p class="Tips">An email will be sent to this email address with your new password</p>
+						  <p class="Tips">Not registered yet? <a href="create-user.php">Click here</a> to create new account.</p>						  
+						</div>
+						<!-- <button id="create-user">Create user</button> -->
 					</section>
 					
 						<!-- Logo -->
@@ -167,9 +99,10 @@
 									echo "<br/>";
 								}
 								?>
-								<input type="submit" tabindex="10" style="width:100%; padding: 1.5px 2em 0.5em 2em;" name="login_btn" value="Login">
-								<a href="#" onClick="resetPassword()">Forgot password?</a>
+								<input type="submit" tabindex="10" style="width:100%; padding: 1.5px 2em 0.5em 2em;" name="login_btn" value="Login">								
 							</form>
+							<a href="#" id="create-user">Forgot Password?</a>
+							
 						</section>
 						<?php
 						}
@@ -297,9 +230,6 @@
 		return true;
 	}
 	
-	function resetPassword(){
-		
-	}
 	
 	
 </script>
