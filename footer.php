@@ -33,12 +33,12 @@
 					
 						<!-- Logo -->
 							<a href="logout.php">Logout</a>
-							<h1 id="logo"><a href="#">STRIPED</a></h1>
+							<h1 id="logo"><a href="index.php">STRIPED</a></h1>
 					
 						<!-- Nav -->
 							<nav id="nav">
 								<ul>
-									<li class="current"><a href="#">Latest Post</a></li>
+									<li class="current"><a href="create-user.php">Create User</a></li>
 									<li><a href="update-profile.php">Update profile</a></li>
 									<li><a href="#">About Me</a></li>
 									<li><a href="#">Contact Me</a></li>

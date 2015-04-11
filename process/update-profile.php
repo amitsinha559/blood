@@ -81,8 +81,7 @@
 						cache: false,
 						success: function(html){
 							if(html == 1){
-								alert(html);
-								window.location.replace("../confirm-user.php");
+								window.location.replace("../index.php");
 							}
 						}
 					});

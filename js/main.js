@@ -22,6 +22,7 @@ function onCountryChangeIndex(value){
 	clearField('places');
 	var countryCode = value;
 	var zipCode = document.forms['search_donor_form']['zip_code'].value;
+	var bloodGroup = document.forms['search_donor_form']['blood_group'].value;
 	if(zipCode === null || zipCode === ''){
 		$("#zip_code_error").html("Please enter the zip code");
 	} else {
@@ -39,21 +40,21 @@ function onCountryChangeIndex(value){
 						clearField('zip_code_error');
 						clearField('country_error');
 						var place = "";
-						$("#places").append("You have searched for places nearby :" + " ");
+						$("#places").append("You are searching for <b>"+ bloodGroup + "</b> blood group in places nearby :" + " ");
 						for(var i = 0; i < data.places.length ; i++){
-							place = data.places[i]['place name'];
-							$("#places").append("<b>" + place + ",</b> ");
-							var query = "zip_code=" + zipCode;
-							$.ajax({
-								type: "POST",
-								url: "process/donor-details.php",
-								data: query,
-								cache: false,
-								success: function(html){
-									alert(html);
-								}
-							});
-						}						
+							place += data.places[i]['place name'] + ", ";
+						}
+						$("#places").append("<b>" + place + "</b> ");
+						var query = "get=list&zip_code=" + zipCode + "&blood_group="+bloodGroup;
+						$.ajax({
+							type: "POST",
+							url: "process/donor-details.php",
+							data: query,
+							cache: false,
+							success: function(data){
+								$("#list").html(data);
+							}
+						});						
 					}
 					console.log(data);
 				}
@@ -230,7 +231,8 @@ function validateOldPassword(oldPass, emailFromSession, newPassword, repeatPassw
 			}
 			
 			if(html == 7) {
-				alert("done");
+				alert("Your password has been changed");
+				window.location.replace("index.php");
 			}
 		}
 	});

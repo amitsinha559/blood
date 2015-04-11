@@ -55,16 +55,18 @@
 		var newPassword = document.forms[form_name]['new_password'].value;
 		var repeatPassword = document.forms[form_name]['repeat_new_password'].value;
 		
-		if(oldPassValue == newPassword) {
-			$("#new_password_error").html("Please choose a different password!");
+
+		if(!validateFormIndex(form_name, requiredFields, requiredFieldsName, errorIds) || !validatePassword(form_name, "repeat_new_password", "new_password", "repeat_new_password_error")){
 			return false;
 		}
 		
 		validateOldPassword(oldPassValue, emailFromSession, newPassword, repeatPassword);
 		
-		if(!validateFormIndex(form_name, requiredFields, requiredFieldsName, errorIds) || !validatePassword(form_name, "repeat_new_password", "new_password", "repeat_new_password_error")){
+		if(oldPassValue == newPassword) {
+			$("#new_password_error").html("Please choose a different password!");
 			return false;
-		} 
+		}
+		
 		return false;
 	}
 </script>

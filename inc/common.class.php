@@ -101,7 +101,7 @@ function sendMail($to, $to_name, $from, $from_name, $subject, $body){
 	}
 }
 
-function getEndOfEmail(){
+function getEmailFooter(){
 	$contact_no = "";
 	$contact_no = CONTACT_US_NUMBER_ONE . ", " . CONTACT_US_NUMBER_TWO . ", " . CONTACT_US_NUMBER_THREE . "<br/>";
 	
@@ -114,7 +114,7 @@ function getEndOfEmail(){
 }
 
 function getConfirmationEmailBody($name, $confirmation_code, $sender_name){
-	$contact_us = getEndOfEmail();
+	$contact_us = getEmailFooter();
 	$body = "Hello " . $name . ",<br/><br/>";
 	$body .= "You recently created an account in ". $sender_name . ". Please click the following link to activate your account <br/>";
 	$body .= "<a href='". BASE_URL ."/confirm-user.php?k=$confirmation_code'>". BASE_URL ."/confirm-user.php?k=$confirmation_code</a><br/><br/>";
@@ -128,11 +128,22 @@ function getConfirmationEmailBody($name, $confirmation_code, $sender_name){
 }
 
 function getResetPasswordBody($name, $newPassword, $sender_name){	
-	$contact_us = getEndOfEmail();
+	$contact_us = getEmailFooter();
 	$body = "Hello " . $name . ",<br/><br/>";
 	$body .= "We received a request to change your password. <br/>";
 	$body .= "Your new password is: <b>$newPassword</b><br/><br/>";
 	$body .= "Click on <a href='". BASE_URL ."/update-password.php'>". BASE_URL ."/update-password.php</a> to update your password.<br/><br/><br/>";
+	$body .= "Warm Regards, <br/>";
+	$body .= $sender_name."<br/>";
+	$body .= "<br/>......................<br/>";
+	$body .= $contact_us;
+	return $body;
+}
+
+function getUpdatePasswordBody($to_name, $newPass, $sender_name){
+	$contact_us = getEmailFooter();
+	$body = "Hello " . $to_name . ",<br/><br/>";
+	$body .= "Your password has been updated. Your new password is: <b>". $newPass ."</b><br/><br/>";
 	$body .= "Warm Regards, <br/>";
 	$body .= $sender_name."<br/>";
 	$body .= "<br/>......................<br/>";
