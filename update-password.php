@@ -2,7 +2,7 @@
 	include "header.php";
 	include "inc/country-code.php";
 	include "inc/common.class.php";
-	$_SESSION['session'] = "amitsinha559@gmail.com";
+	
 ?>
 
 <div id="content">
@@ -34,7 +34,7 @@
 				<div class="">
 					<input type="submit" tabindex="4" class='btn btn-primary' style="width:206px;" name="change_password_btn" value="Change Now">
 				</div>
-			</form>
+			</form>			
 		</article>
 	</div>
 </div>
@@ -42,7 +42,7 @@
 <script src="js/main.js"></script>
 <script type="text/javascript">
 	function validateChangePasswordForm(){
-		
+		var emailFromSession = "<?php echo $_SESSION['email']; ?>";
 		clearField("old_password_error");
 		clearField("new_password_error");
 		clearField("repeat_new_password_error");
@@ -52,7 +52,15 @@
 		var errorIds = ['old_password_error', 'new_password_error', 'repeat_new_password_error'];
 		
 		var oldPassValue = document.forms[form_name]['old_password'].value;
-		validateOldPassword(oldPassValue, "amitsinha559@gmail.com");
+		var newPassword = document.forms[form_name]['new_password'].value;
+		var repeatPassword = document.forms[form_name]['repeat_new_password'].value;
+		
+		if(oldPassValue == newPassword) {
+			$("#new_password_error").html("Please choose a different password!");
+			return false;
+		}
+		
+		validateOldPassword(oldPassValue, emailFromSession, newPassword, repeatPassword);
 		
 		if(!validateFormIndex(form_name, requiredFields, requiredFieldsName, errorIds) || !validatePassword(form_name, "repeat_new_password", "new_password", "repeat_new_password_error")){
 			return false;

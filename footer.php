@@ -1,12 +1,7 @@
-  <style>
-  
+  <style>  
     label, input { display:block; }
+	#dialog-form { font-size: 12px}
     input.text { margin-bottom:12px; width:95%; padding: .4em; }
-    fieldset { padding:0; border:0; margin-top:25px; }
-    h1 { font-size: 1.2em; margin: .6em 0; }
-    div#users-contain { width: 350px; margin: 20px 0; }
-    div#users-contain table { margin: 1em 0; border-collapse: collapse; width: 100%; }
-    div#users-contain table td, div#users-contain table th { border: 1px solid #eee; padding: .6em 10px; text-align: left; }
     .ui-dialog .ui-state-error { padding: .3em; }
     .validateTips { border: 1px solid transparent; padding: 0.3em; }
   </style>
@@ -20,13 +15,12 @@
 				}
 				?>
 				<div id="sidebar">
-					<section>
 						<div id="dialog-form" title="Please enter your registered email id">
 						 
 						  <form>
 							<fieldset>
 							  <label for="email">Email</label>
-							  <input type="text" name="reset_email" id="reset_email" value="jane@smith.com" class="text ui-widget-content ui-corner-all">
+							  <input type="text" name="reset_email" id="reset_email" value="amitsinha559@gmail.com" class="text ui-widget-content ui-corner-all">
 						 
 							  <!-- Allow form submission with keyboard without duplicating the dialog button -->
 							  <input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
@@ -36,10 +30,9 @@
 						  <p class="Tips">An email will be sent to this email address with your new password</p>
 						  <p class="Tips">Not registered yet? <a href="create-user.php">Click here</a> to create new account.</p>						  
 						</div>
-						<!-- <button id="create-user">Create user</button> -->
-					</section>
 					
 						<!-- Logo -->
+							<a href="logout.php">Logout</a>
 							<h1 id="logo"><a href="#">STRIPED</a></h1>
 					
 						<!-- Nav -->
@@ -102,7 +95,6 @@
 								<input type="submit" tabindex="10" style="width:100%; padding: 1.5px 2em 0.5em 2em;" name="login_btn" value="Login">								
 							</form>
 							<a href="#" id="create-user">Forgot Password?</a>
-							
 						</section>
 						<?php
 						}

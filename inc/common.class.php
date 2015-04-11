@@ -75,9 +75,7 @@ function uploadImage($folder_name)
 }
 
 function sendMail($to, $to_name, $from, $from_name, $subject, $body){
-	echo "1";
 	require("phpmailer/class.phpmailer.php");
-	echo "2";
 	$mail = new PHPMailer();
 	$mail->IsSMTP(); // send via SMTP
 	$mail->SMTPAuth = true; // turn on SMTP authentication
@@ -103,24 +101,42 @@ function sendMail($to, $to_name, $from, $from_name, $subject, $body){
 	}
 }
 
+function getEndOfEmail(){
+	$contact_no = "";
+	$contact_no = CONTACT_US_NUMBER_ONE . ", " . CONTACT_US_NUMBER_TWO . ", " . CONTACT_US_NUMBER_THREE . "<br/>";
+	
+	$contact_us = "";
+	if($contact_no != "") {
+		$contact_us = "<font size='1px'><b>Contact us :- </b> " . $contact_no . "</font>";
+		$contact_us .= "<font size='1px'>We welcome feedback or complaints. Feel free reply our emails.</font><br/>";
+	}
+	return $contact_us;
+}
+
 function getConfirmationEmailBody($name, $confirmation_code, $sender_name){
+	$contact_us = getEndOfEmail();
 	$body = "Hello " . $name . ",<br/><br/>";
-	$body .= "You recently created an account in YOUR_APP_NAME. Please click the following link to activate your account <br/>";
-	$body .= "<a href='http://localhost/blood/confirm-user.php?k=$confirmation_code'>http://localhost/blood/confirm-user.php?k=$confirmation_code</a><br/><br/>";
+	$body .= "You recently created an account in ". $sender_name . ". Please click the following link to activate your account <br/>";
+	$body .= "<a href='". BASE_URL ."/confirm-user.php?k=$confirmation_code'>". BASE_URL ."/confirm-user.php?k=$confirmation_code</a><br/><br/>";
 	$body .= "(If the link above does not appear clickable or does not open a browser window when you click it, copy it and paste it into your web browser's Location bar.) <br/> <br/>";
 	$body .= "Warm Regards, <br/>";
 	$body .= $sender_name . "<br/><br/><br/>";
-	$body .= "<font size='1px'><b>* </b>This message was sent to you by YOUR_APP_NAME. </font><br/>";
-	$body .= "<font size='1px'><b>** </b>You received this message because you have requested to create an account in YOUR_APP_NAME. <br/></font>";
+	$body .= "<font size='1px'><b>* </b>This message was sent to you by ". $sender_name . ". </font><br/>";
+	$body .= "<font size='1px'><b>** </b>You received this message because you have requested to create an account in ". $sender_name . ". <br/></font><br/>";
+	$body .= $contact_us;
 	return $body;
 }
 
-function getResetPasswordBody($name, $newPassword, $sender_name){
+function getResetPasswordBody($name, $newPassword, $sender_name){	
+	$contact_us = getEndOfEmail();
 	$body = "Hello " . $name . ",<br/><br/>";
 	$body .= "We received a request to change your password. <br/>";
-	$body .= "Your new password is: <b>$newPassword</b><br/><br/><br/>";
+	$body .= "Your new password is: <b>$newPassword</b><br/><br/>";
+	$body .= "Click on <a href='". BASE_URL ."/update-password.php'>". BASE_URL ."/update-password.php</a> to update your password.<br/><br/><br/>";
 	$body .= "Warm Regards, <br/>";
 	$body .= $sender_name."<br/>";
+	$body .= "<br/>......................<br/>";
+	$body .= $contact_us;
 	return $body;
 }
 ?>

@@ -6,8 +6,11 @@
 		$check_email_result = query($check_email_query);
 		while($row = mysql_fetch_array($check_email_result)){
 			if($row['email'] == $email) {
-				$randomCode = md5($email);
+				$randomCode = md5(rand());
 				$newPassword = substr($randomCode, 1, 7);
+				$md5Pass = passwordSafety($newPassword);
+				$updatePasswordQuery = "UPDATE `login_details` SET password='$md5Pass' WHERE email='$email'";
+				$updatePasswordResult = query($updatePasswordQuery);
 				$to_name = $row['name'];
 				$sender_name = SENDER_NAME; //warm regards
 				$body = getResetPasswordBody($to_name, $newPassword, $sender_name);

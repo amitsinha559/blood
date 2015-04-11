@@ -21,7 +21,7 @@
 		$country = textSafety($_POST['country']);
 		$address = textSafety($_POST['address']);
 		$comment = textSafety($_POST['comment']);
-		$confirmation_code = md5($email);
+		$confirmation_code = md5(rand());
 		if(!$name || !$gender || !$email || !$first_password || !$repeat_password || !$blood_group || !$first_time_donor || !$mobile_number_one || !$zip_code || !$country || !$address){
 			$url="../create-user.php?error=100&name=$name&gender=$gender&email=$email&blood_group=$blood_group&first_time_donor=$first_time_donor&zip_code=$zip_code&country=$country&last_donate_date=$last_donate_date&place_of_donation=$place_of_donation&mobile_number_two=$mobile_number_two&mobile_number_one=$mobile_number_one&address=$address&comment=$comment";
 			header("Refresh:0;URL=$url");
@@ -114,7 +114,6 @@
 						cache: false,
 						success: function(html){
 							if(html == 1){
-								alert(html);
 								window.location.replace("../confirm-user.php?sent=true");
 							}
 						}

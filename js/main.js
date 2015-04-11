@@ -120,6 +120,7 @@ $(function() {
 			data: query,
 			cache: false,
 			success: function(html){
+				alert(html);
 				alert("Please check your email now.");
 			}
 		});
@@ -129,9 +130,11 @@ $(function() {
     }
  
     dialog = $( "#dialog-form" ).dialog({
+	  dialogClass: 'no-close success-dialog',
+	  resizable: false,
       autoOpen: false,
-      height: 300,
-      width: 350,
+      height: 330,
+      width: 500,
       modal: true,
       buttons: {
         "Reset Password": sendEmail,
@@ -151,7 +154,7 @@ $(function() {
     });
 	
 	
-	$('#create-user').click(function(e) {  
+	$('#create-user').click(function(e) { 
 		dialog.dialog( "open" );
     });
   });
@@ -169,15 +172,66 @@ function validatePassword(formName, passTwoFieldName, passOneFieldName, errorId)
 	return true;
 }
 
-function validateOldPassword(oldPass, emailFromSession){
-	var query = "ajax=true&pass="+oldPass+"&email=" + emailFromSession;
+function validateOldPassword(oldPass, emailFromSession, newPassword, repeatPassword){
+	var query = "ajax=true&oldPass="+oldPass+"&email=" + emailFromSession + "&newPass=" + newPassword + "&repeatPass=" + repeatPassword;
 	$.ajax({
 		type: "POST",
 		url: "process/update-password.php",
 		data: query,
 		cache: false,
 		success: function(html){
-			alert(html);
+			if(html == 1234) {
+				$("#repeat_new_password_error").html("Please repeat your old new password!");
+				$("#old_password_error").html("Please enter your old password!");
+				$("#new_password_error").html("Please choose a new password!");	
+			}
+			
+			if(html == 234) {
+				$("#repeat_new_password_error").html("Please repeat your old new password!");
+				$("#new_password_error").html("Please choose a new password!");	
+			}
+			
+			if(html == 134) {
+				$("#repeat_new_password_error").html("Please repeat your old new password!");
+				$("#old_password_error").html("Please enter your old password!");
+			}
+			
+			if(html == 124) {
+				$("#new_password_error").html("Please choose a new password!");	
+				$("#old_password_error").html("Please enter your old password!");
+				$("#repeat_new_password_error").html("Password is not matching!");
+			}
+			
+			if(html == 34) {
+				$("#repeat_new_password_error").html("Password is not matching!");
+			}
+			
+			if(html == 24) {
+				$("#new_password_error").html("Please choose a new password!");	
+				$("#repeat_new_password_error").html("Password is not matching!");
+			}
+			
+			if(html == 14) {
+				$("#old_password_error").html("Please enter your old password!");
+				$("#new_password_error").html("Please choose a new password!");	
+				$("#repeat_new_password_error").html("Password is not matching!");
+			}
+			
+			if(html == 16) {
+				$("#old_password_error").html("Please enter your old password!");
+			}
+			
+			if(html == 6) {
+				$("#old_password_error").html("Incorrect Password!");
+			}
+			
+			if(html == 4) {
+				$("#repeat_new_password_error").html("Password is not matching!");
+			}
+			
+			if(html == 7) {
+				alert("done");
+			}
 		}
 	});
 }
