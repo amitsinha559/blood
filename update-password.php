@@ -5,35 +5,38 @@
 	
 ?>
 
+
 <div id="content">
 	<div class="inner">
 		<article class="box post post-excerpt">
 			<h3>Please Enter Proper Details</h3><br/>
 			<form method="POST" name="reset_password_form" action="" onsubmit="return validateChangePasswordForm()">
+			<fieldset>
 				<div id="globalError" class="error"></div>
 				<div class="">Old password :</div>
 				<div class="">
-					<input type="password" tabindex="1" maxlength="60" id="old_password" name="old_password" value=""/>
+					<input type="password" tabindex="1" maxlength="60" id="old_password" name="old_password" value="" title="Please provide your old password."/>
 				</div>
 				<div id="old_password_error" class="error"></div>
 				<br/>
 				
 				<div class="">New password :</div>
 				<div class="">
-					<input type="password" tabindex="2" maxlength="60" id="new_password" name="new_password" value=""/>
+					<input type="password" tabindex="2" maxlength="60" id="new_password" name="new_password" value="" title="Please provide your new password."/>
 				</div>
 				<div id="new_password_error" class="error"></div>
 				<br/>
 				
 				<div class="">Repeat New password :</div>
 				<div class="">
-					<input type="password" tabindex="3" maxlength="60" id="repeat_new_password" name="repeat_new_password" value=""/>
+					<input type="password" tabindex="3" maxlength="60" id="repeat_new_password" name="repeat_new_password" value="" title="Please repeat your new password."/>
 				</div>
 				<div id="repeat_new_password_error" class="error"></div>
 				<br/>
 				<div class="">
 					<input type="submit" tabindex="4" class='btn btn-primary' style="width:206px;" name="change_password_btn" value="Change Now">
 				</div>
+			</fieldset>
 			</form>			
 		</article>
 	</div>

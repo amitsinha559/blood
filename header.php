@@ -2,6 +2,7 @@
 <?php 
 	session_start();
 ?>
+
 <html>
 	<head>
 		<title>Striped by HTML5 UP</title>
@@ -30,6 +31,11 @@
 		</noscript>
 		<!--[if lte IE 8]><link rel="stylesheet" href="css/ie/v8.css" /><![endif]-->
 	</head>
-	
+	<style>
+	  .ui-tooltip {
+		*width: 210px;
+		font-size: 12px
+	  }
+	</style>
 	<body class="left-sidebar">
 		<div id="wrapper">

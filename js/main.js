@@ -163,77 +163,132 @@ $(function() {
   
 function validatePassword(formName, passTwoFieldName, passOneFieldName, errorId){
 	passwordOneValue = document.forms[formName][passOneFieldName].value;
-	passwordTwoValue = document.forms[formName][passTwoFieldName].value;
-	if(passwordOneValue != passwordTwoValue){
-		var div = document.getElementById(errorId);
+	if(passwordOneValue.length < 6) {
+		var div = document.getElementById('pass_one_error');
 		div.innerHTML = '';
-		div.innerHTML = 'Password is not matching';
+		div.innerHTML = 'Password must have at least 6 characters';
 		return false;
+	} else {
+		passwordOneValue = document.forms[formName][passOneFieldName].value;
+		passwordTwoValue = document.forms[formName][passTwoFieldName].value;
+		if(passwordOneValue != passwordTwoValue){
+			var div = document.getElementById(errorId);
+			div.innerHTML = '';
+			div.innerHTML = 'Password is not matching';
+			return false;
+		}
 	}
+	
 	return true;
 }
 
 function validateOldPassword(oldPass, emailFromSession, newPassword, repeatPassword){
 	var query = "ajax=true&oldPass="+oldPass+"&email=" + emailFromSession + "&newPass=" + newPassword + "&repeatPass=" + repeatPassword;
+	if(newPassword.length < 6 ) {
+		$("#new_password_error").html("Password should have at least 6 characters");
+	} else {
+		$.ajax({
+			type: "POST",
+			url: "process/update-password.php",
+			data: query,
+			cache: false,
+			success: function(html){
+				if(html == 1234) {
+					$("#repeat_new_password_error").html("Please repeat your old new password!");
+					$("#old_password_error").html("Please enter your old password!");
+					$("#new_password_error").html("Please choose a new password!");	
+				}
+				
+				if(html == 234) {
+					$("#repeat_new_password_error").html("Please repeat your old new password!");
+					$("#new_password_error").html("Please choose a new password!");	
+				}
+				
+				if(html == 134) {
+					$("#repeat_new_password_error").html("Please repeat your old new password!");
+					$("#old_password_error").html("Please enter your old password!");
+				}
+				
+				if(html == 124) {
+					$("#new_password_error").html("Please choose a new password!");	
+					$("#old_password_error").html("Please enter your old password!");
+					$("#repeat_new_password_error").html("Password is not matching!");
+				}
+				
+				if(html == 34) {
+					$("#repeat_new_password_error").html("Password is not matching!");
+				}
+				
+				if(html == 24) {
+					$("#new_password_error").html("Please choose a new password!");	
+					$("#repeat_new_password_error").html("Password is not matching!");
+				}
+				
+				if(html == 14) {
+					$("#old_password_error").html("Please enter your old password!");
+					$("#new_password_error").html("Please choose a new password!");	
+					$("#repeat_new_password_error").html("Password is not matching!");
+				}
+				
+				if(html == 16) {
+					$("#old_password_error").html("Please enter your old password!");
+				}
+				
+				if(html == 6) {
+					$("#old_password_error").html("Incorrect Password!");
+				}
+				
+				if(html == 4) {
+					$("#repeat_new_password_error").html("Password is not matching!");
+				}
+				
+				if(html == 7) {
+					alert("Your password has been changed");
+					window.location.replace("index.php");
+				}
+			}
+		});
+	}
+	
+}
+
+$(function() {
+    var tooltips = $( "[title]" ).tooltip({
+      position: {
+        my: "left top",
+        at: "right+5 top-5"
+      }
+    });
+  });
+  
+function getDonorDetails(bloodGroup, zipCode){
+	var getLocationQuery = "get=location&zip_code=" + zipCode;
 	$.ajax({
 		type: "POST",
-		url: "process/update-password.php",
+		url: "process/donor-details.php",
+		data: getLocationQuery,
+		cache: false,
+		success: function(data){
+			var placesFromDB = data.split("__");
+			alert(placesFromDB.length);
+			var allPlaces = " ";
+			$("#places").append("You are searching for <b>"+ bloodGroup + "</b> blood group in places nearby :" + " ");
+			//alert(placesFromDB[1]);
+			for(var i = 1; i < placesFromDB.length ; i++ ){
+				allPlaces += " <b> " + placesFromDB[i] + " ,</b>";
+			}
+			$("#places").append(allPlaces);
+		}
+	});
+	
+	var query = "get=list&zip_code=" + zipCode + "&blood_group="+bloodGroup;
+	$.ajax({
+		type: "POST",
+		url: "process/donor-details.php",
 		data: query,
 		cache: false,
-		success: function(html){
-			if(html == 1234) {
-				$("#repeat_new_password_error").html("Please repeat your old new password!");
-				$("#old_password_error").html("Please enter your old password!");
-				$("#new_password_error").html("Please choose a new password!");	
-			}
-			
-			if(html == 234) {
-				$("#repeat_new_password_error").html("Please repeat your old new password!");
-				$("#new_password_error").html("Please choose a new password!");	
-			}
-			
-			if(html == 134) {
-				$("#repeat_new_password_error").html("Please repeat your old new password!");
-				$("#old_password_error").html("Please enter your old password!");
-			}
-			
-			if(html == 124) {
-				$("#new_password_error").html("Please choose a new password!");	
-				$("#old_password_error").html("Please enter your old password!");
-				$("#repeat_new_password_error").html("Password is not matching!");
-			}
-			
-			if(html == 34) {
-				$("#repeat_new_password_error").html("Password is not matching!");
-			}
-			
-			if(html == 24) {
-				$("#new_password_error").html("Please choose a new password!");	
-				$("#repeat_new_password_error").html("Password is not matching!");
-			}
-			
-			if(html == 14) {
-				$("#old_password_error").html("Please enter your old password!");
-				$("#new_password_error").html("Please choose a new password!");	
-				$("#repeat_new_password_error").html("Password is not matching!");
-			}
-			
-			if(html == 16) {
-				$("#old_password_error").html("Please enter your old password!");
-			}
-			
-			if(html == 6) {
-				$("#old_password_error").html("Incorrect Password!");
-			}
-			
-			if(html == 4) {
-				$("#repeat_new_password_error").html("Password is not matching!");
-			}
-			
-			if(html == 7) {
-				alert("Your password has been changed");
-				window.location.replace("index.php");
-			}
+		success: function(data){
+			$("#list").html(data);
 		}
 	});
 }
