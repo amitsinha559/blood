@@ -8,8 +8,35 @@
 	include "../inc/common.class.php";
 	// "select album_name, id, album_image from album_details where album_name like '%$q%' or album_type like '%$q%' or album_description like '%$q%' order by id LIMIT 8"
 	if(isset($_POST['get']) && isset($_POST['area']) && isset($_POST['country_code']) && $_POST['get'] == "list") {
-		$country_code = textSafety($_POST['country_code']);
+		$country = textSafety($_POST['country_code']);
 		$area = textSafety($_POST['area']);
+		$getAllDataByAreaQuery = "SELECT login_details.id, login_details.name, login_details.email, login_details.joining_date, donor_details.login_id, donor_details.gender, donor_details.blood_group, donor_details.first_time_donor, donor_details.last_donate_date, donor_details.place_of_donation, donor_details.mobile_number_one, donor_details.mobile_number_two, donor_details.zip_code, donor_details.country, donor_details.address, donor_details.places_nearby, donor_details.comments FROM `donor_details` INNER JOIN `login_details` ON donor_details.login_id = login_details.id && donor_details.country='$country' && donor_details.places_nearby like '%$area%' && login_details.isConfirmed = 'yes'";
+		$getAllDataByAreaResult = query($getAllDataByAreaQuery);
+		?>
+		<br/><hr/>
+		<table style="border: 1px solid #E3DCDC; align:center">
+			<thead>
+				<th><b>Sl. No.</b></th>
+				<th><b>Name</b></th>
+				<th><b>Email</b></th>
+				<th><b>Phone Number</b></th>
+				<th><b>If Unreachable</b></th>
+			</thead>
+		<?php
+		while($row = mysql_fetch_array($getAllDataByAreaResult)){
+		?>			
+			<tr style="text-align:center">
+				<td>Name</td>
+				<td><?php echo $row['name']; ?></td>
+				<td><?php echo $row['email']; ?></td>
+				<td><?php echo $row['mobile_number_one']; ?></td>
+				<td><a href="#" onClick="reportDonor(<?php echo $row['id']; ?>)">Report</a></td>
+			</tr>
+		<?php
+		}
+		?>		
+		</table>
+		<?php
 	}
 	
 	if(isset($_POST['get']) && isset($_POST['zip_code']) && $_POST['get'] == "location") {
@@ -20,6 +47,16 @@
 			echo $row['places_nearby'];
 		}
 	}
+	
+	if(isset($_POST['get']) && isset($_POST['area']) && $_POST['get'] == "places") {
+		$area = textSafety($_POST['area']);
+		$getLocaitonQuery = "SELECT DISTINCT places_nearby from `donor_details` WHERE places_nearby like '%$area%'";
+		$getLocaitonResult = query($getLocaitonQuery);
+		while($row = mysql_fetch_array($getLocaitonResult)){
+			echo $row['places_nearby'];
+		}
+	}
+	
 	
 	if(isset($_POST['get']) && isset($_POST['zip_code']) && $_POST['get'] == "list" && isset($_POST['blood_group'])) {
 		$zip_code = textSafety($_POST['zip_code']);

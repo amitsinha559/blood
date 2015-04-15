@@ -122,8 +122,29 @@
 <script type="text/javascript">
 
 	function onAreaChange(value){
+		clearField('places');
+		var bloodGroup = document.forms['search_donor_by_area_form']['blood_group_area'].value;
 		var countryCode = document.forms['search_donor_by_area_form']['country_area'].value;
 		var selectedArea = value;
+		var getLocationQuery = "get=places&area=" + selectedArea;
+		$.ajax({
+			type: "POST",
+			url: "process/donor-details.php",
+			data: getLocationQuery,
+			cache: false,
+			success: function(data){
+				var placesFromDB = data.split("__");
+				alert(placesFromDB.length);
+				var allPlaces = " ";
+				$("#places").append("You are searching for <b>"+ bloodGroup + "</b> blood group in places nearby :" + " ");
+				alert(placesFromDB[1]);
+				for(var i = 1; i < placesFromDB.length ; i++ ){
+					allPlaces += " <b> " + placesFromDB[i] + " ,</b>";
+				}
+				$("#places").append(allPlaces);
+			}
+		});
+		
 		var query = "get=list&area=" + selectedArea + "&country_code="+countryCode;
 		$.ajax({
 			type: "POST",
