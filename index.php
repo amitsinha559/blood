@@ -76,16 +76,32 @@
 						<br/>
 						<div class="">Choose Country :</div>
 						<div class="">
-							<select tabindex="2" style="width: 350px;" id="country_area" name="country_area">
-								<option value="A+">A+</option>
+							<select tabindex="2" style="width: 350px;" id="country_area" name="country_area" onmousedown="this.value='';" onchange="onCountryChangeForSearch(this.value);">
+								<option value="empty">--Select Country--</option>
+							<?php
+								$getAllCountryNameQuery = "SELECT DISTINCT country FROM `donor_details`";
+								$getAllCountryNameResult = query($getAllCountryNameQuery);
+								$arr = $country_array;
+								while($row = mysql_fetch_array($getAllCountryNameResult)){
+									foreach ($arr as $key => $value) {
+										if($row['country'] == $key) {
+									?>
+										<option value="<?php echo $row['country']; ?>"><?php echo $arr[$row['country']]; ?></option>
+									<?php			
+										}
+								
+									}
+								}
+							?>		
 							</select>
 						</div>
 						<br/>
-						<div class="">Choose Area :</div>
-						<div class="">
-							<select tabindex="3" style="width: 350px;" id="places_area" name="places_area">
-								<option value="A+">A+</option>
-							</select>
+						<div id="placesValueLabel">
+							<div class="">Choose Area :</div>
+							<div class="">
+								<select tabindex="3" style="width: 350px;" id="places_area" name="places_area" onmousedown="this.value='';" onchange="onAreaChange(this.value);">
+								</select>
+							</div>
 						</div>
 						<br/>
 						<div class=""></div>
@@ -105,24 +121,42 @@
 <script src="js/main.js"></script>
 <script type="text/javascript">
 
+	function onAreaChange(value){
+		var countryCode = document.forms['search_donor_by_area_form']['country_area'].value;
+		var selectedArea = value;
+		var query = "get=list&area=" + selectedArea + "&country_code="+countryCode;
+		$.ajax({
+			type: "POST",
+			url: "process/donor-details.php",
+			data: query,
+			cache: false,
+			success: function(data){
+				$("#list").html(data);
+			}
+		});
+	}
+
+	function showSearchByPinCode(){
+		$("#searchByPinCodeId").show(1000);
+		$("#searchByAreaId").hide(1000);
+	}
+
+	function showSearchByArea(){
+		$("#searchByPinCodeId").hide(1000);
+		$("#searchByAreaId").show(1000);
+	}
+
 	$(function(){
+		$("#placesValueLabel").hide();
 		$("#searchByPinCodeId").hide();
 		$( "#radio" ).buttonset();
 		clearField('zip_code_error');
 		clearField('country_error');
 	});
 	
-	function showSearchByPinCode(){
-		$("#searchByPinCodeId").show(1000);
-		$("#searchByAreaId").hide(1000);
-	}
-	
-	function showSearchByArea(){
-		$("#searchByPinCodeId").hide(1000);
-		$("#searchByAreaId").show(1000);
-	}
-	
+
 	function validateText(){
+		clearField('places');
 		var formName = "search_donor_form";
 		var requiredFields = ["zip_code"];
 		var requiredFieldsName = ["Zip Code"];

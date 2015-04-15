@@ -6,6 +6,11 @@
 </style>
 <?php
 	include "../inc/common.class.php";
+	// "select album_name, id, album_image from album_details where album_name like '%$q%' or album_type like '%$q%' or album_description like '%$q%' order by id LIMIT 8"
+	if(isset($_POST['get']) && isset($_POST['area']) && isset($_POST['country_code']) && $_POST['get'] == "list") {
+		$country_code = textSafety($_POST['country_code']);
+		$area = textSafety($_POST['area']);
+	}
 	
 	if(isset($_POST['get']) && isset($_POST['zip_code']) && $_POST['get'] == "location") {
 		$zip_code = textSafety($_POST['zip_code']);

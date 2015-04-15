@@ -292,3 +292,25 @@ function getDonorDetails(bloodGroup, zipCode){
 		}
 	});
 }
+
+function onCountryChangeForSearch(value){
+	var countryCode = value;
+	var query="get=area&country_code=" + countryCode;
+	$.ajax({
+		type: "POST",
+		url: "process/misc-ajax.php",
+		data: query,
+		cache: false,
+		dataType:'json',
+		success: function(data){
+			if(data.success) {
+				if(value != "empty"){
+					$("#placesValueLabel").show(1000);
+					$("#places_area").html(data.options);
+				} else {
+					$("#placesValueLabel").hide(1000);
+				}
+			}
+		}
+	});
+}
