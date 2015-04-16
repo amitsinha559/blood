@@ -8,10 +8,12 @@
 
 
 				<?php
-				if(isset($_SESSION["email"]) && isset($_SESSION["name"]) && isset($_SESSION["id"])){
+				$isLoggedIn = false;
+				if(isset($_SESSION["email"]) && isset($_SESSION["name"]) && isset($_SESSION["id"]) && $_SESSION["isLogin"]){
 					$sessionName = $_SESSION["name"];
 					$sessionId = $_SESSION["id"];
 					$sessionEmail = $_SESSION["email"];
+					$isLoggedIn = $_SESSION["isLogin"];
 				}
 				?>
 				<div id="sidebar">
@@ -32,16 +34,34 @@
 						</div>
 					
 						<!-- Logo -->
-							<a href="logout.php">Logout</a>
-							<h1 id="logo"><a href="index.php">STRIPED</a></h1>
+							<h1 id="logo"><a href="index.php"><!--<img width="70px" src="images/donate_blood_icon_1.png"><br/>Donate Blood--></a></h1>
 					
 						<!-- Nav -->
 							<nav id="nav">
 								<ul>
-									<li class="current"><a href="create-user.php">Create User</a></li>
-									<li><a href="update-profile.php">Update profile</a></li>
-									<li><a href="#">About Me</a></li>
-									<li><a href="#">Contact Me</a></li>
+									<li class="current"><a href="index.php">Search Donor</a></li>
+									<?php
+									if (!$isLoggedIn) {
+									?>
+										<li class=""><a href="create-user.php">Register & Be a Donor</a></li>
+									<?php
+									}
+									if ($isLoggedIn) {
+									?>
+										<li><a href="update-profile.php">Update Profile</a></li>
+										<li><a href="update-password.php">Update Password</a></li>
+									<?php
+									}
+									?>
+									<li><a href="contact-us.php">Contact Us</a></li>
+									<?php
+									if ($isLoggedIn) {
+									?>
+										<li><a href="logout.php">Logout</a></li>
+									<?php
+									}
+									?>
+									
 								</ul>
 							</nav>
 
@@ -200,7 +220,8 @@
 						
 						<!-- Copyright -->
 							<ul id="copyright">
-								<li>&copy; Untitled.</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+								<li>&copy; KAAKAI Newspaper.</li>
+								<li>Goto: <a href="http://kaakai.in">http://www.kaakai.in</a></li>
 							</ul>
 
 					</div>

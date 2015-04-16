@@ -40,6 +40,7 @@
 						<div class="">Choose Country: (Optional)</div>
 						<div class="">
 							<select tabindex="3" id="country" name="country" style="width: 350px;" onmousedown="this.value='';" onchange="onCountryChangeIndex(this.value);">
+								<option value="empty">--Select Country--</option>
 							<?php
 								$arr = $country_array;
 								foreach ($arr as $key => $value) {
@@ -59,7 +60,7 @@
 					</form>
 				</div>
 				<div id="searchByAreaId">
-					<form method="POST" name="search_donor_by_area_form" action="" onsubmit="return validateText()">
+					<form method="POST" name="search_donor_by_area_form" action="" onsubmit="return validateSearchByAreaForm()">
 						<div class="">Choose Blood Group :</div>
 						<div class="">
 							<select tabindex="1" style="width: 350px;" id="blood_group_area" name="blood_group_area">
@@ -73,6 +74,7 @@
 								<option value="AB-">AB-</option>
 							</select>
 						</div>
+						<div id="blood_group_area_error"></div>
 						<br/>
 						<div class="">Choose Country :</div>
 						<div class="">
@@ -95,6 +97,7 @@
 							?>		
 							</select>
 						</div>
+						<div id="country_area_error"></div>
 						<br/>
 						<div id="placesValueLabel">
 							<div class="">Choose Area :</div>
@@ -103,9 +106,10 @@
 								</select>
 							</div>
 						</div>
+						<div id="places_area_error"></div>
 						<br/>
 						<div class=""></div>
-						<div class="">
+						<div id="searchButtonId">
 							<input type="submit" tabindex="4" class='btn btn-primary' style="width:206px;" name="search_donors_area" value="Search">
 						</div>
 					</form>
@@ -121,12 +125,27 @@
 <script src="js/main.js"></script>
 <script type="text/javascript">
 
-	function onAreaChange(value){
+	function validateSearchByAreaForm() {
+		var formName = "search_donor_by_area_form";
+		var requiredFields = ["blood_group_area", "country_area", "places_area"];
+		var requiredFieldsName = ["Blood Group", "Country", "Area / Locality"];
+		var errorIds = ["blood_group_area_error", "country_area_error", "places_area_error"];
+		if(!validateFormIndex(formName, requiredFields, requiredFieldsName, errorIds)){
+			return false;
+		}
+		var bloodGroup = document.forms[formName]['blood_group_area'].value;
+		var countryCode = document.forms[formName]['country_area'].value;
+		var places = document.forms[formName]['places_area'].value;
+		
+		getDonorListByArea (bloodGroup, countryCode, places);
+		
+		return false;
+		
+	}
+	
+	function getDonorListByArea (bloodGroup, countryCode, places) {
 		clearField('places');
-		var bloodGroup = document.forms['search_donor_by_area_form']['blood_group_area'].value;
-		var countryCode = document.forms['search_donor_by_area_form']['country_area'].value;
-		var selectedArea = value;
-		var getLocationQuery = "get=places&area=" + selectedArea;
+		var getLocationQuery = "get=places&area=" + places;
 		$.ajax({
 			type: "POST",
 			url: "process/donor-details.php",
@@ -134,10 +153,8 @@
 			cache: false,
 			success: function(data){
 				var placesFromDB = data.split("__");
-				alert(placesFromDB.length);
 				var allPlaces = " ";
 				$("#places").append("You are searching for <b>"+ bloodGroup + "</b> blood group in places nearby :" + " ");
-				alert(placesFromDB[1]);
 				for(var i = 1; i < placesFromDB.length ; i++ ){
 					allPlaces += " <b> " + placesFromDB[i] + " ,</b>";
 				}
@@ -145,7 +162,7 @@
 			}
 		});
 		
-		var query = "get=list&area=" + selectedArea + "&country_code="+countryCode;
+		var query = "get=list&area=" + places + "&country_code="+countryCode + "&blood_group=" + bloodGroup;
 		$.ajax({
 			type: "POST",
 			url: "process/donor-details.php",
@@ -155,6 +172,14 @@
 				$("#list").html(data);
 			}
 		});
+	}
+
+	function onAreaChange(value){
+		clearField('places');		
+		var bloodGroup = document.forms['search_donor_by_area_form']['blood_group_area'].value;
+		var countryCode = document.forms['search_donor_by_area_form']['country_area'].value;
+		var selectedArea = value;
+		getDonorListByArea (bloodGroup, countryCode, selectedArea);
 	}
 
 	function showSearchByPinCode(){
@@ -169,6 +194,7 @@
 
 	$(function(){
 		$("#placesValueLabel").hide();
+		$("#searchButtonId").hide();
 		$("#searchByPinCodeId").hide();
 		$( "#radio" ).buttonset();
 		clearField('zip_code_error');

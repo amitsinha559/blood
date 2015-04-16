@@ -36,6 +36,7 @@
 				<div class="">
 					<input type="submit" tabindex="4" class='btn btn-primary' style="width:206px;" name="change_password_btn" value="Change Now">
 				</div>
+				<div id="update_password_loader" style="text-align:center"><img src="images/loader.gif" width="80px"/></div>
 			</fieldset>
 			</form>			
 		</article>
@@ -44,6 +45,9 @@
 
 <script src="js/main.js"></script>
 <script type="text/javascript">
+	$(function(){
+		$("#update_password_loader").hide();
+	});
 	function validateChangePasswordForm(){
 		var emailFromSession = "<?php echo $_SESSION['email']; ?>";
 		clearField("old_password_error");
@@ -58,17 +62,21 @@
 		var newPassword = document.forms[form_name]['new_password'].value;
 		var repeatPassword = document.forms[form_name]['repeat_new_password'].value;
 		
-
-		if(!validateFormIndex(form_name, requiredFields, requiredFieldsName, errorIds) || !validatePassword(form_name, "repeat_new_password", "new_password", "repeat_new_password_error")){
+		$("#update_password_loader").show();
+		if(!validateFormIndex(form_name, requiredFields, requiredFieldsName, errorIds)){
+			$("#update_password_loader").hide();
+			return false;
+		}
+		
+		if(oldPassValue == newPassword) {
+			$("#new_password_error").html("Please choose a different password!");
+			$("#update_password_loader").hide();
 			return false;
 		}
 		
 		validateOldPassword(oldPassValue, emailFromSession, newPassword, repeatPassword);
 		
-		if(oldPassValue == newPassword) {
-			$("#new_password_error").html("Please choose a different password!");
-			return false;
-		}
+		
 		
 		return false;
 	}

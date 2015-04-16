@@ -22,6 +22,7 @@
 					$_SESSION["isLogin"] = false;
 					$_SESSION["email"] = null;
 					$_SESSION["name"] = null;
+					$_SESSION["id"] = null;
 				} else {
 					$_SESSION["isLogin"] = true;
 					$_SESSION["email"] = $row['email'];

@@ -16,6 +16,7 @@ define("SENDER_EMAIL", "stackover96@gmail.com");
 define("CONTACT_US_NUMBER_ONE", "9962872460");
 define("CONTACT_US_NUMBER_TWO", "7308426816");
 define("CONTACT_US_NUMBER_THREE", "9878933443");
+define("SORRY_MESSAGE_ONE", "<br/><strong>Sorry for the inconvenience. No results found!!</strong>");
 
 //Email routes
 define("CONTACT_US_EMAIL", "amitsinha559@gmail.com");

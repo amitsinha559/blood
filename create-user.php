@@ -159,6 +159,7 @@
 						<div class="">Choose Country:</div>
 						<div class="">
 							<select tabindex="13" id="country" name="country" onmousedown="this.value='';" onchange="onCountryChange(this.value);">
+								<option value="empty">--Select Country--</option>
 							<?php
 								$arr = $country_array;
 								foreach ($arr as $key => $value) {
@@ -194,6 +195,7 @@
 							<input type="submit" tabindex="15" class='btn btn-primary' style="width:206px;" name="submit_details" value="Submit">
 						</div>
 				</form>
+				<div id="create_user_loader" style="text-align:center"><img src="images/loader.gif" width="80px"/></div>
 		</article>
 	</div>
 </div>
@@ -211,6 +213,7 @@
 	}
 
 	$(function() {
+		$("#create_user_loader").hide();
 		var errorCode = "<?php echo $error_code; ?>";
 		clearField('globalError');
 		clearField('pass_one_error');
@@ -237,10 +240,12 @@
 	});
 
 	function validateText(){
+		$("#create_user_loader").show();
 		var isFirstTimeDonor = document.forms['donor_form']['first_time_donor'].value;
 		var requiredFields;
 		var requiredFieldsName;
 		var errorIds;
+				
 		if (isFirstTimeDonor === "Yes") {
 			requiredFields = ['name', 'gender', 'email', 'first_password', 'repeat_password', 'mobile_number_one', 'zip_code', 'address'];
 			requiredFieldsName = ['Name', 'Gender', 'Email', 'Password', 'Password', 'Mobile Number', 'Zip Code', 'Address'];
@@ -257,8 +262,10 @@
 			emailErrorId: 'email_error'
 		};
 		if(!validateForm(formName, requiredFields, requiredFieldsName, errorIds)){
+			$("#create_user_loader").hide();
 			return false;
 		}
+		$("#create_user_loader").hide();
 		return true;
 	}
 	

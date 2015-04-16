@@ -121,7 +121,6 @@ $(function() {
 			data: query,
 			cache: false,
 			success: function(html){
-				alert(html);
 				alert("Please check your email now.");
 			}
 		});
@@ -178,7 +177,6 @@ function validatePassword(formName, passTwoFieldName, passOneFieldName, errorId)
 			return false;
 		}
 	}
-	
 	return true;
 }
 
@@ -193,6 +191,7 @@ function validateOldPassword(oldPass, emailFromSession, newPassword, repeatPassw
 			data: query,
 			cache: false,
 			success: function(html){
+				$("#update_password_loader").hide();
 				if(html == 1234) {
 					$("#repeat_new_password_error").html("Please repeat your old new password!");
 					$("#old_password_error").html("Please enter your old password!");
@@ -243,7 +242,6 @@ function validateOldPassword(oldPass, emailFromSession, newPassword, repeatPassw
 				}
 				
 				if(html == 7) {
-					alert("Your password has been changed");
 					window.location.replace("index.php");
 				}
 			}
@@ -270,10 +268,8 @@ function getDonorDetails(bloodGroup, zipCode){
 		cache: false,
 		success: function(data){
 			var placesFromDB = data.split("__");
-			alert(placesFromDB.length);
 			var allPlaces = " ";
 			$("#places").append("You are searching for <b>"+ bloodGroup + "</b> blood group in places nearby :" + " ");
-			//alert(placesFromDB[1]);
 			for(var i = 1; i < placesFromDB.length ; i++ ){
 				allPlaces += " <b> " + placesFromDB[i] + " ,</b>";
 			}
@@ -306,9 +302,11 @@ function onCountryChangeForSearch(value){
 			if(data.success) {
 				if(value != "empty"){
 					$("#placesValueLabel").show(1000);
+					$("#searchButtonId").show(1000);
 					$("#places_area").html(data.options);
 				} else {
 					$("#placesValueLabel").hide(1000);
+					$("#searchButtonId").hide(1000);
 				}
 			}
 		}

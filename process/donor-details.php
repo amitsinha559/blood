@@ -7,11 +7,17 @@
 <?php
 	include "../inc/common.class.php";
 	// "select album_name, id, album_image from album_details where album_name like '%$q%' or album_type like '%$q%' or album_description like '%$q%' order by id LIMIT 8"
-	if(isset($_POST['get']) && isset($_POST['area']) && isset($_POST['country_code']) && $_POST['get'] == "list") {
+	if(isset($_POST['get']) && isset($_POST['area']) && isset($_POST['blood_group']) && isset($_POST['country_code']) && $_POST['get'] == "list") {
 		$country = textSafety($_POST['country_code']);
 		$area = textSafety($_POST['area']);
-		$getAllDataByAreaQuery = "SELECT login_details.id, login_details.name, login_details.email, login_details.joining_date, donor_details.login_id, donor_details.gender, donor_details.blood_group, donor_details.first_time_donor, donor_details.last_donate_date, donor_details.place_of_donation, donor_details.mobile_number_one, donor_details.mobile_number_two, donor_details.zip_code, donor_details.country, donor_details.address, donor_details.places_nearby, donor_details.comments FROM `donor_details` INNER JOIN `login_details` ON donor_details.login_id = login_details.id && donor_details.country='$country' && donor_details.places_nearby like '%$area%' && login_details.isConfirmed = 'yes'";
+		$blood_group = textSafety($_POST['blood_group']);
+		$blood_group = str_replace(' ', '', $blood_group);
+		if($blood_group == 'A' || $blood_group == 'B' || $blood_group == 'AB'){
+			$blood_group = $blood_group."+";
+		}
+		$getAllDataByAreaQuery = "SELECT login_details.id, login_details.name, login_details.email, login_details.joining_date, donor_details.login_id, donor_details.gender, donor_details.blood_group, donor_details.first_time_donor, donor_details.last_donate_date, donor_details.place_of_donation, donor_details.mobile_number_one, donor_details.mobile_number_two, donor_details.zip_code, donor_details.country, donor_details.address, donor_details.places_nearby, donor_details.comments FROM `donor_details` INNER JOIN `login_details` ON donor_details.login_id = login_details.id && donor_details.country='$country' && donor_details.blood_group='$blood_group' && donor_details.places_nearby like '%$area%' && login_details.isConfirmed = 'yes'";
 		$getAllDataByAreaResult = query($getAllDataByAreaQuery);
+		$message = SORRY_MESSAGE_ONE;
 		?>
 		<br/><hr/>
 		<table style="border: 1px solid #E3DCDC; align:center">
@@ -23,7 +29,9 @@
 				<th><b>If Unreachable</b></th>
 			</thead>
 		<?php
+		
 		while($row = mysql_fetch_array($getAllDataByAreaResult)){
+			$message = "";
 		?>			
 			<tr style="text-align:center">
 				<td>Name</td>
@@ -37,6 +45,7 @@
 		?>		
 		</table>
 		<?php
+		echo $message;
 	}
 	
 	if(isset($_POST['get']) && isset($_POST['zip_code']) && $_POST['get'] == "location") {
@@ -65,6 +74,7 @@
 		if($blood_group == 'A' || $blood_group == 'B' || $blood_group == 'AB'){
 			$blood_group = $blood_group."+";
 		}
+		$message = SORRY_MESSAGE_ONE;
 		?>
 		<br/><hr/>
 		<table style="border: 1px solid #E3DCDC; align:center">
@@ -79,8 +89,8 @@
 		$getAllDataQuery = "SELECT login_details.id, login_details.name, login_details.email, login_details.joining_date, donor_details.login_id, donor_details.gender, donor_details.blood_group, donor_details.first_time_donor, donor_details.last_donate_date, donor_details.place_of_donation, donor_details.mobile_number_one, donor_details.mobile_number_two, donor_details.zip_code, donor_details.country, donor_details.address, donor_details.places_nearby, donor_details.comments FROM `donor_details` INNER JOIN `login_details` ON donor_details.login_id = login_details.id && donor_details.zip_code='$zip_code' && donor_details.blood_group = '$blood_group' && login_details.isConfirmed = 'yes'";
 		$getAllDataResult = query($getAllDataQuery);
 		while($row = mysql_fetch_array($getAllDataResult)){
+			$message = "";
 		?>
-			
 			<tr style="text-align:center">
 				<td>Name</td>
 				<td><?php echo $row['name']; ?></td>
@@ -93,6 +103,7 @@
 		?>		
 		</table>
 		<?php
+		echo $message;
 	}
 ?>
 <script type="text/javascript">

@@ -131,15 +131,25 @@ function onCountryChange(value){
 }
 
 function validateZipAndCountry(){
+	var country = document.forms['donor_form']['country'].value;
+	if(country === "empty"){
+		var errorIdName = clearField('country_error');
+		errorIdName.innerHTML = 'Please select your country';
+		return false;
+	}
+	alert('in validate zip country');
 	var returnVal = true;
 	clearField('zip_code_error');
 	var zipCode=document.forms['donor_form']['zip_code'].value;
 	var countryCode=document.forms['donor_form']['country'].value;
 	var client = new XMLHttpRequest();
 	client.open("GET", "http://api.zippopotam.us/" + countryCode + "/" + zipCode, true);
+	alert('before client');
 	client.onreadystatechange = function() {
 		if(client.readyState == 4) {
-			if(client.statusText === "Not Found" || client.status === 404){
+			alert(client.responseText);
+			if(client.responseText === null || client.responseText === "" || client.statusText === "Not Found" || client.status === 404){
+				alert('404');
 				var errorIdName = clearField('zip_code_error');
 				errorIdName.innerHTML = 'Opps!! zip code is available in this country';
 				errorIdName = clearField('country_error');
@@ -150,6 +160,7 @@ function validateZipAndCountry(){
 				$("#place").hide();
 				returnVal = false;
 			} else {
+				alert('founr success!!');
 				returnVal = true;
 			}			
 		}
