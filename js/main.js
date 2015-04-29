@@ -20,6 +20,7 @@ function onCountryChangeIndex(value){
 	clearField('zip_code_error');
 	clearField('country_error');
 	clearField('places');
+	clearField('list');
 	var countryCode = value;
 	var zipCode = document.forms['search_donor_form']['zip_code'].value;
 	var bloodGroup = document.forms['search_donor_form']['blood_group'].value;

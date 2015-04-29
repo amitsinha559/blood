@@ -183,11 +183,15 @@
 	}
 
 	function showSearchByPinCode(){
+		clearField('list');
+		clearField('places');
 		$("#searchByPinCodeId").show(1000);
 		$("#searchByAreaId").hide(1000);
 	}
 
 	function showSearchByArea(){
+		clearField('list');
+		clearField('places');
 		$("#searchByPinCodeId").hide(1000);
 		$("#searchByAreaId").show(1000);
 	}
@@ -204,6 +208,10 @@
 
 	function validateText(){
 		clearField('places');
+		clearField('list');
+		
+		clearField('zip_code_error');
+		clearField('country_error');
 		var formName = "search_donor_form";
 		var requiredFields = ["zip_code"];
 		var requiredFieldsName = ["Zip Code"];

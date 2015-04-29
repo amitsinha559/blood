@@ -3,8 +3,8 @@
 	include "../inc/common.class.php";
 	
 	if(isset($_POST['submit_details'])) {
-		print_r($_POST);
-		echo "<br/><br/>";
+		
+		
 		
 		$name = textSafety($_POST['name']);
 		$gender = textSafety($_POST['gender']);
@@ -71,32 +71,98 @@
 				}
 			}
 		}
+		
+		// $validatePlacesNearbyQuery = "SELECT * FROM `donor_details` WHERE login_id='$id'";
+		// $validatePlacesNearbyResult = query($validatePlacesNearbyQuery);
+		// while($row = mysql_fetch_array($validatePlacesNearbyResult)){
+			// if ($row['places_nearby'] != ""){
+				// echo $row['places_nearby'];
+				
+				// $sender_name = SENDER_NAME; //warm regards
+				// $body = getConfirmationEmailBody($name, $confirmation_code, $sender_name);
+				// $to = $email;
+				// $to_name = $name;
+				// $subject = "Confirmation mail";
+				
+				// $from = SENDER_EMAIL;
+				// $from_name = APP_NAME;
+				
+				// sendMail($to, $to_name, $from, $from_name, $subject, $body);
+				
+			// } else {
+				// $deleteUserFromDonorDetailsQuery = "DELETE FROM `donor_details` WHERE login_id = '$id'";
+				// $deleteUserFromDonorDetailsResult = query($deleteUserFromDonorDetailsQuery);
+				
+				// $deleteUserFromLoginDetailsQuery = "DELETE FROM `login_details` WHERE id = '$id'";
+				// $deleteUserFromLoginDetailsResult = query($deleteUserFromLoginDetailsQuery);
+				// $url="../create-user.php?error=104&msp=INVPNCD&name=$name&gender=$gender&email=$email&blood_group=$blood_group&first_time_donor=$first_time_donor&last_donate_date=$last_donate_date&place_of_donation=$place_of_donation&mobile_number_two=$mobile_number_two&mobile_number_one=$mobile_number_one&address=$address&comment=$comment";
+				// header("Refresh:0;URL=$url");
+				// exit(0);
+			// }
+		// }
 
-		$sender_name = SENDER_NAME; //warm regards
-		$body = getConfirmationEmailBody($name, $confirmation_code, $sender_name);
-		$to = $email;
-		$to_name = $name;
-		$subject = "Confirmation mail";
-		
-		$from = SENDER_EMAIL;
-		$from_name = APP_NAME;
-		
-		sendMail($to, $to_name, $from, $from_name, $subject, $body);
 		
 	}
-	
+
 ?>
+
+<div id="waitingMessage" align="center">
+<br/><br/><br/>
+<div id="regIsUnderProgress"><font size="14px" color="#C3C3C3">Please wait. Registration is under progress.</font></div>
+<div id="emailIsUnderProgress"><font size="14px" color="#C3C3C3">Please wait. Sending confirmation email.</font></div>
+<br/><br/>
+<div id="create_user_loader" style="text-align:center"><img src="../images/loader.gif" width="80px"/></div>
+</div>
+
 <script src="../js/jquery.min.js"></script>
 <script type="text/javascript">
 	$(function() {
+		$("#regIsUnderProgress").show();
+		$("#emailIsUnderProgress").hide();
+		$("#create_user_loader").show();
+		
 		var country = "<?php echo $country; ?>";
 		var zipCode = "<?php echo $zip_code; ?>";
-		var loginId = "<?php echo $id; ?>";
+		var loginId = "<?php echo $id; ?>";		
+		var confirmation_code = "<?php echo $confirmation_code; ?>";
+		var name = "<?php echo $name; ?>";
+		var gender = "<?php echo $gender; ?>";
+		var email = "<?php echo $email; ?>";
+		var blood_group = "<?php echo $blood_group; ?>";
+		var first_time_donor = "<?php echo $first_time_donor; ?>";
+		var zip_code = "<?php echo $zip_code; ?>";
+		var country = "<?php echo $country; ?>";
+		var last_donate_date = "<?php echo $last_donate_date; ?>";
+		var place_of_donation = "<?php echo $place_of_donation; ?>";
+		var mobile_number_two = "<?php echo $mobile_number_two; ?>";
+		var mobile_number_one = "<?php echo $mobile_number_one; ?>";
+		var address = "<?php echo $address; ?>";
+		var comment = "<?php echo $comment; ?>";
+
 		var client = new XMLHttpRequest();
 		client.open("GET", "http://api.zippopotam.us/" + country + "/" + zipCode, true);
 		client.onreadystatechange = function() {
 			if(client.readyState == 4) {
 				if(client.statusText === "Not Found" || client.status === 404){
+					var query = "loginId=" + loginId;
+					$.ajax({
+						type: "POST",
+						url: "delete-user-spam.php",
+						data: query,
+						cache: false,
+						success: function(html){
+							if (html == 12) {
+								$("#regIsUnderProgress").hide();
+								$("#emailIsUnderProgress").hide();
+								$("#create_user_loader").hide();
+								
+								window.location.replace("../create-user.php?error=107&msp=INVZPCD&name=" + name + "&gender=" + gender + "&email=" + email + "&blood_group=" + blood_group + "&first_time_donor=" + first_time_donor + "&last_donate_date=" + last_donate_date + "&place_of_donation=" + place_of_donation + "&mobile_number_two=" + mobile_number_two + "&mobile_number_one=" + mobile_number_one + "&address=" + address + "&comment=" + comment);
+							} 
+							if (html == 2) {
+								window.location.replace("../create-user.php?error=105&msp=INVENTR");
+							}
+						}
+					});
 				} else {
 					var data = JSON.parse(client.responseText);
 					var state = data.places[0].state;
@@ -114,7 +180,24 @@
 						cache: false,
 						success: function(html){
 							if(html == 1){
-								window.location.replace("../confirm-user.php?sent=true");
+								$("#regIsUnderProgress").hide();
+								$("#emailIsUnderProgress").show();
+								$("#create_user_loader").show();
+								var query = "loginId=" + loginId + "&name=" + name + "&email=" + email + "&confirmationCode=" + confirmation_code;
+								$.ajax({
+									type: "POST",
+									url: "send-email.php",
+									data: query,
+									cache: false,
+									success: function(res){
+										if(res == 1){
+											$("#regIsUnderProgress").hide();
+											$("#emailIsUnderProgress").hide();
+											$("#create_user_loader").hide();
+											window.location.replace("../confirm-user.php?sent=true");
+										}
+									}
+								});								
 							}
 						}
 					});
