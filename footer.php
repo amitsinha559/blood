@@ -96,7 +96,7 @@
 							}
 						?>
 						<section class="box">
-							<form method="POST" name="login_form" action="process/login.php" onsubmit="return submitLoginForm()">
+							<form method="POST" name="login_form" action="" onsubmit="return submitLoginForm()">
 								<input type="text" tabindex="8" class="text login-box-left" name="login_email" placeholder="Email" />
 								<div id="login_email_error"></div>
 								<br/>
@@ -233,14 +233,24 @@
 <script src="js/main.js"></script>
 <script type="text/javascript">
 	function submitLoginForm(){
+		clearField('login_email_error');
+		clearField('login_password_error');
 		var formName = "login_form";
 		var requiredFields = ["login_email", "login_password"];
 		var requiredFieldsName = ["Email", "Password"];
 		var errorIds = ["login_email_error", "login_password_error"];
-		if(!validateFormIndex(formName, requiredFields, requiredFieldsName, errorIds)){
+		var email = document.forms[formName]['login_email'].value;
+		var password = document.forms[formName]['login_password'].value;
+		if(!validateFormIndex(formName, requiredFields, requiredFieldsName, errorIds)){			
 			return false;
 		}
-		return true;
+		if(!emailValidate(email)){
+			$("#login_email_error").html("Please enter a valid email id");
+			return false;
+		}
+		
+		doLogin(email, password);
+		return false;
 	}
 	
 	

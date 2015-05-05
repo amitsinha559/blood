@@ -313,3 +313,16 @@ function onCountryChangeForSearch(value){
 		}
 	});
 }
+
+function doLogin(email, password){
+	var query = "login=true&email=" + email + "&password="+password;
+	$.ajax({
+		type: "POST",
+		url: "process/login.php",
+		data: query,
+		cache: false,
+		success: function(data){
+			alert(data);
+		}
+	});	
+}
