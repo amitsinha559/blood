@@ -13,17 +13,28 @@
 				$name = $row['name'];
 				$confirmation_code = $row['confirmation_code'];
 				$code = 1001;
-				$url="../index.php?email=$email&con=false&no=yes&name=$name&code=$confirmation_code";
-				header("Refresh:0;URL=$url");
-				exit(0);
+				
+				$notConfirmedResponse = array(
+					'email' => $email,
+					'name' => $name,
+					'code' => $confirmation_code
+				);
+				
+				//$url="../index.php?email=$email&con=false&no=yes&name=$name&code=$confirmation_code";
 			} else {
 				if($row['email'] != $email){
 					$code = 1002;
+					$emailMismatchResponse = array(
+						'invalidEmail' => true,
+					);
 					$_SESSION["isLogin"] = false;
 					$_SESSION["email"] = null;
 					$_SESSION["name"] = null;
 					$_SESSION["id"] = null;
 				} else {
+					$loggedInResponse = array(
+						'isLoggedIn' => true
+					);
 					$_SESSION["isLogin"] = true;
 					$_SESSION["email"] = $row['email'];
 					$_SESSION["name"] = $row['name'];
@@ -36,5 +47,11 @@
 			}
 		}
 	}
-	echo $code;
+	$response = array(
+		'notConfirmedResponse' => $notConfirmedResponse,
+		'loggedInResponse' => $loggedInResponse,
+		'emailMismatchResponse' => $emailMismatchResponse,
+	);
+	header('Content-Type: application/json');
+	echo json_encode($response);
 ?>

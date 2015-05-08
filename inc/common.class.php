@@ -114,6 +114,7 @@ function getEmailFooter(){
 }
 
 function getConfirmationEmailBody($name, $confirmation_code, $sender_name){
+	$confirmation_code = trim($confirmation_code);
 	$contact_us = getEmailFooter();
 	$body = "Hello " . $name . ",<br/><br/>";
 	$body .= "You recently created an account in ". $sender_name . ". Please click the following link to activate your account <br/>";

@@ -2,6 +2,7 @@
 	include "header.php";
 	include "inc/country-code.php";
 	include "inc/common.class.php";
+	include "inc/constants.inc.php";
 	$zip_code = '';
 	
 ?>

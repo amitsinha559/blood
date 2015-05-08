@@ -322,7 +322,18 @@ function doLogin(email, password){
 		data: query,
 		cache: false,
 		success: function(data){
-			alert(data);
+			if(data.notConfirmedResponse) {
+				var email = data.notConfirmedResponse.email;
+				var name = data.notConfirmedResponse.name;
+				var confirmationCode = data.notConfirmedResponse.code;
+				window.location.replace("index.php?email=" + email + "&con=false&no=yes&name=" + name + "&code="+confirmationCode);
+			} else if(data.loggedInResponse && data.loggedInResponse.isLoggedIn) {
+				window.location.replace("index.php");
+			} else if(data.emailMismatchResponse && data.emailMismatchResponse.invalidEmail) {
+				window.location.replace("index.php?error=unknown");
+			} else {
+				$("#login_global_error").html("Email password mismatch.");
+			}
 		}
 	});	
 }
