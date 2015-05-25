@@ -235,7 +235,7 @@
 		if(errorCode === '103'){
 			$("#email_error").html('Email is already exist. You can login now.');
 		}
-		$( "#last_donate_date" ).datepicker();
+		$( "#last_donate_date" ).datepicker({ dateFormat: 'yy/mm/dd' });
 		$("#donor_details").hide();
 	});
 

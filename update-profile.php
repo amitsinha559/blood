@@ -144,7 +144,7 @@
 						<div id="donor_details">
 							<div class="">Last Date of Donate :</div>
 							<div class="">
-								<input type="text" tabindex="8" maxlength="60" id="last_donate_date" name="last_donate_date" placeholder="mm/dd/yyyy" value="<?php echo $last_donate_date; ?>"/>
+								<input type="text" tabindex="8" maxlength="60" id="last_donate_date" name="last_donate_date" placeholder="yyyy/mm/dd" value="<?php echo $last_donate_date; ?>"/>
 							</div>
 							<div id="last_donate_error" class="error"></div>
 							<br/>
@@ -249,7 +249,8 @@
 		if(errorCode === '103'){
 			$("#email_error").html('Email is already exist. You can login now.');
 		}
-		$( "#last_donate_date" ).datepicker();
+		
+		$( "#last_donate_date" ).datepicker({ dateFormat: 'yy/mm/dd' });
 		$("#donor_details").hide();
 	});
 

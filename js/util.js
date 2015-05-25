@@ -38,7 +38,7 @@ function validateForm(formName, requiredFields, requiredFieldsName, errorIds){
 				returnVal = validateDate(x);
 				if(!returnVal){
 					var lastDonateErrorId = clearField('last_donate_error');
-					lastDonateErrorId.innerHTML = "Please enter a valid date. e.g: 06/28/2000";
+					lastDonateErrorId.innerHTML = "Please enter a valid date. e.g: 2000/07/14";
 				}
 			}
 			var placeOfDonation = document.forms[formName][requiredFields[i]].value;
@@ -169,23 +169,22 @@ function validateZipAndCountry(){
 	return returnVal;
 }
 
-function validateDate(txtDate)
-{
+function validateDate(txtDate){
   var currVal = txtDate;
   if(currVal == '')
     return false;
   
   //Declare Regex  
-  var rxDatePattern = /^(\d{1,2})(\/|-)(\d{1,2})(\/|-)(\d{4})$/; 
+  var rxDatePattern = /^(\d{4})(\/|-)(\d{1,2})(\/|-)(\d{1,2})$/; 
   var dtArray = currVal.match(rxDatePattern); // is format OK?
 
   if (dtArray == null)
      return false;
  
   //Checks for mm/dd/yyyy format.
-  dtMonth = dtArray[1];
-  dtDay= dtArray[3];
-  dtYear = dtArray[5];
+  dtMonth = dtArray[3];
+  dtDay= dtArray[5];
+  dtYear = dtArray[1];
 
   if (dtMonth < 1 || dtMonth > 12)
       return false;

@@ -48,8 +48,9 @@
 									}
 									if ($isLoggedIn) {
 									?>
+										<li><a href="update-last-donation.php">Update Last Donation</a></li>
 										<li><a href="update-profile.php">Update Profile</a></li>
-										<li><a href="update-password.php">Update Password</a></li>
+										<li><a href="update-password.php">Update Password</a></li>										
 									<?php
 									}
 									?>
